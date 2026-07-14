@@ -62,6 +62,7 @@ static void MX_USB_OTG_FS_PCD_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+
 /* USER CODE END 0 */
 
 /**
@@ -72,7 +73,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -106,40 +106,40 @@ uint8_t flag2 =0;
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+/* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-	  // Check if 1s (or more) has passed
-	  if ((HAL_GetTick() - mytimer) >= 5000)
-	  {
-	      mytimer += 5000; // Reset the timer target for the next 500ms
 
-	      // Toggle LED 1 (Bit 0 - LSB)
-	      HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
-
-	      flag1++;
-	      if (flag1 == 2)
-	      {
-	          flag1 = 0; // Reset flag
-
-	          // Toggle LED 2 (Bit 1)
-	          HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-
-	          flag2++;
-	          if (flag2 == 2)
-	          {
-	              flag2 = 0; // Reset flag
-
-	              // Toggle LED 3 (Bit 2 - MSB)
-	              HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-	          }
-	      }
-	  }
     /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
-}
 
+    // Check if 500ms (or more) have passed
+    if ((HAL_GetTick() - mytimer) >= 500)
+    {
+        mytimer += 500; // Reset the timer target for the next 500ms
+
+        // Toggle LED 1 (Bit 0 - LSB) - UPDATED TO MATCH YOUR MX_GPIO_INIT
+        HAL_GPIO_TogglePin(GPIOB, MY_LED_Pin);
+
+        flag1++;
+        if (flag1 == 2)
+        {
+            flag1 = 0; // Reset flag
+            // Toggle LED 2 (Bit 1)
+            HAL_GPIO_TogglePin(GPIOB, LD2_Pin);
+            flag2++;
+            if (flag2 == 2)
+            {
+                flag2 = 0; // Reset flag
+                // Toggle LED 3 (Bit 2 - MSB)
+                HAL_GPIO_TogglePin(GPIOB, LD3_Pin);
+            }
+        }
+    }
+  }
+}
+  /* USER CODE END 3 */
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -288,7 +288,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, MY_LED_Pin|LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(USB_PowerSwitchOn_GPIO_Port, USB_PowerSwitchOn_Pin, GPIO_PIN_RESET);
@@ -299,8 +299,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USER_Btn_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD1_Pin LD3_Pin LD2_Pin */
-  GPIO_InitStruct.Pin = LD1_Pin|LD3_Pin|LD2_Pin;
+  /*Configure GPIO pins : MY_LED_Pin LD3_Pin LD2_Pin */
+  GPIO_InitStruct.Pin = MY_LED_Pin|LD3_Pin|LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
