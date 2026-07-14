@@ -124,7 +124,7 @@ int main(void)
 				  //mytimer += 500; // Reset the timer target for the next 500ms
 
 				  // Toggle LED 1 (Bit 0 - LSB) - UPDATED TO MATCH YOUR MX_GPIO_INIT
-				  HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
+				  HAL_GPIO_TogglePin(GPIOB, LD3_Pin);
 
 				  flag1++;
 				  if (flag1 == 2)
@@ -137,7 +137,7 @@ int main(void)
 					  {
 						  flag2 = 0; // Reset flag
 						  // Toggle LED 3 (Bit 2 - MSB)
-						  HAL_GPIO_TogglePin(GPIOB, LD3_Pin);
+						  HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
 					  }
 				  }
 			  }
