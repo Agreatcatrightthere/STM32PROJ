@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
-
+#include <main.h>
 
 #define SYST_CSR ((volatile uint32_t *)0xE000E010)
 #define SYST_RVR ((volatile uint32_t *)0xE000E014)
@@ -16,6 +16,11 @@
 #define GPIOCbase 0x40020800
 #define GPIOCMode ((volatile uint32_t *)GPIOCbase)
 #define GPIOCState ((volatile uint32_t *)(GPIOCbase + 0x10))
+
+
+#define DEMCR ((volatile uint32_t *)(0xE000EDFC))
+#define DWT_CTRL ((volatile uint32_t *)(0xE0001000))
+#define DWT_CYCCNT ((volatile uint32_t *)(0xE0001004))
 
 void sysTickInit(void){
 	*SYST_CSR = 0; // initializes the control and status register to 0 to ensure it starts off exactly as we start our code
@@ -52,18 +57,26 @@ int main(void){
 	// setting Button PORT GPIOC to input mode
 	*GPIOCMode &= 0XF3FFFFFF; //USERBUTTON AT PC13
 
+	// setting up DWT Cycle timer to count number of cycles required to switch on LED
+	*DEMCR |= (1<<24);
+	*DWT_CYCCNT = 0;
+	*DWT_CTRL |= (1<<0);
+
 	uint8_t flag1 =0;
 	uint8_t flag2 =0;
     uint8_t flag3 =0;
 	uint32_t lastbuttonstate = 0x00;
 	uint32_t currbuttonstate = 0x00;
+	uint32_t elapsed_cycles =0x00;
+
 
 	while(1){
+		uint32_t start_cycles = *DWT_CYCCNT;
 		currbuttonstate = *GPIOCState & (1 << 13);
 
 		if (currbuttonstate && (lastbuttonstate ==0)){
 			Delay_ms(50);
-			if(*GPIOCState & (1 << 13))
+			if(*GPIOCState & (1 << 13)){
 				if (flag1){
 					*GPIOBState = 0X40000000;
 					flag1--;
@@ -88,8 +101,11 @@ int main(void){
 					*GPIOBState = 0X00004000;
 					flag1++;
 				}
-
+			}
 		}
+		uint32_t end_cycles = *DWT_CYCCNT;
+		elapsed_cycles = end_cycles - start_cycles;
 		lastbuttonstate = currbuttonstate;
+
 	}
 }

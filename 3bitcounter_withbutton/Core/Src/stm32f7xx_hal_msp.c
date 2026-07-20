@@ -138,13 +138,13 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 
     /* USER CODE END USART3_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_USART3_CLK_DISABLE();
+   // __HAL_RCC_USART3_CLK_DISABLE();
 
     /**USART3 GPIO Configuration
     PD8     ------> USART3_TX
     PD9     ------> USART3_RX
     */
-    HAL_GPIO_DeInit(GPIOD, STLK_RX_Pin|STLK_TX_Pin);
+    //HAL_GPIO_DeInit(GPIOD, STLK_RX_Pin|STLK_TX_Pin);
 
     /* USER CODE BEGIN USART3_MspDeInit 1 */
 
